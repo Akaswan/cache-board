@@ -1,34 +1,30 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import React from 'react'
 
-function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+interface ElectronAPI {
+  captureClipboard: () => void
+}
+
+declare global {
+  interface Window {
+    electronAPI: ElectronAPI
+  }
+}
+
+const App: React.FC = () => {
+  const captureClipboard = (): void => {
+    window.electronAPI.captureClipboard()
+  }
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
+    <div style={{ padding: '1rem', fontFamily: 'Arial, sans-serif' }}>
+      <h1>Clipboard Viewer</h1>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <button onClick={captureClipboard} style={{ marginRight: '1rem' }}>
+          Read Clipboard
+        </button>
       </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    </div>
   )
 }
 
